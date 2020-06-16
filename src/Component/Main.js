@@ -1,7 +1,16 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Container, Card, Table, Button, Navbar, Modal, Form, Row, Col, InputGroup, FormControl } from 'react-bootstrap'
+import Dexie from "dexie";
 
 function Main() {
+  const db = new Dexie("ReactDexie");
+db.version(1).stores({
+  posts: "tanggal,jumlah,judul"
+})
+
+db.open().catch((err) => {
+  console.log(err.stack || err)
+})
     const [modalShow, setModalShow] = useState(false)
     const [modalShow2, setModalShow2] = useState(false)
     const [tanggal, setTanggal] = useState("")
@@ -10,7 +19,54 @@ function Main() {
     const [jumlah, setJumlah] = useState("")
     const [judul, setJudul] = useState("")
     const [attandance, setAtandance] = useState([])
-    
+    const [posts, setPosts] = useState("")
+
+    const getFile = (e) => {
+      console.log(e)
+
+      let reader = new FileReader();
+      reader.readAsDataURL(e[0]);
+      reader.onload= (e) => {
+        setTanggal(reader.result);
+      }
+    }
+
+    const deletePost = async(id) => {
+      console.log(id);
+      db.posts.delete(id);
+      let allPosts = await db.posts.toArray();
+      setPosts(allPosts);
+    }
+
+    const getPostInfo = (e) => {
+      e.preventDefault();
+      if( tanggal!== "" && jumlah !== "" && judul !== ""){
+          let post = {
+              tanggal: tanggal,
+              jumlah: jumlah,
+              judul: judul
+          }
+         
+  
+          db.posts.add(post).then(async() => {
+              //retrieve all posts inside the database
+              let allPosts = await db.posts.toArray();
+              //set the posts
+              setPosts(allPosts);
+          });
+          
+      } 
+  }
+
+  useEffect(() => {
+    const getPosts = async() => {
+      let allPosts = await db.posts.toArray();
+      setPosts(allPosts);
+  }
+  getPosts();
+
+}, [])
+
     function handleSubmit(e) {
         e.preventDefault();
 
@@ -105,7 +161,7 @@ function Main() {
               </Form>
             </Modal.Body>
             <Modal.Footer>
-                <Button type="submit" onClick={handleSubmit}>Simpan</Button>
+                <Button type="submit" onSubmit={getPostInfo} onClick={handleSubmit}>Simpan</Button>
               <Button onClick={props.onHide}>Close</Button>
             </Modal.Footer>
           </Modal>
