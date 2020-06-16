@@ -1,0 +1,19 @@
+.App {
+  text-align: center;
+}
+
+.card{
+  position: absolute;
+  top:50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+.dataHariIni{
+  height: 20rem;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
