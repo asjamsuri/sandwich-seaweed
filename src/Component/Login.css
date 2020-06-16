@@ -1,0 +1,22 @@
+.Body {
+    height: 100vh;
+}
+.Card-Header{
+    font-size: 23px;
+}
+.btn{
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   height: 100%;
+   margin-top: 5px;
+   border-radius: 20px;
+}
+
+.text{
+    border-radius: 20px;
+}
+
+.card-style{
+    border-radius: 20px;
+}
